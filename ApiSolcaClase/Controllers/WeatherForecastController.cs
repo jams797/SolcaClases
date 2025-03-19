@@ -1,3 +1,6 @@
+using ApiSolcaClase.Bll.WeatherForecast;
+using ApiSolcaClase.Helpers.Functions;
+using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.WeatherForecast;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +16,12 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -30,11 +35,13 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
-    
+
 
     [HttpPost]
-    public WeatherForecastModelReponse Post()
+    public ResponseModelGeneral Post([FromBody] WheatherForecastRequestModel resqModel)
     {
-        return new WeatherForecastModelReponse(200, "Ok");
+        WeatherForecastBll bll = new WeatherForecastBll(_configuration);
+
+        return bll.DecryptPass(resqModel);
     }
 }
