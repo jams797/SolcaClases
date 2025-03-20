@@ -1,10 +1,12 @@
-﻿namespace ApiSolcaClase.Helpers.Models
+﻿using ApiSolcaClase.Helpers.Functions;
+
+namespace ApiSolcaClase.Helpers.Models
 {
     public class ResponseModelGeneral
     {
         public ResponseModelGeneral(int code, string message, dynamic data = null, string messageDev = "")
         {
-            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            IConfiguration configuration = HelperGeneral.GetEnvVar();
             bool isDebug = configuration.GetValue<bool>("isDebug");
 
             this.code = code;

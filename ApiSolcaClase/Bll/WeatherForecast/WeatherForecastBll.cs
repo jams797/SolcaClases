@@ -1,4 +1,5 @@
-﻿using ApiSolcaClase.Helpers.Functions;
+﻿using ApiSolcaClase.Helpers.Data;
+using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.WeatherForecast;
 using Microsoft.Extensions.Configuration;
@@ -32,9 +33,9 @@ namespace ApiSolcaClase.Bll.WeatherForecast
             {
                 return new ResponseModelGeneral(
                     500,
-                    "Ocurrio un error al descifrar el dato",
+                    MessageHelper.ErrorGeneral,
                     textT,
-                    "Error en el catch de desencriptar la clave"
+                    MessageHelper.ErrorPasswordDesencrypt
                 );
             }
         }
