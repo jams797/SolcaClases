@@ -1,8 +1,11 @@
-﻿using ApiSolcaClase.Helpers.Models;
+﻿using ApiSolcaClase.Bll.Security;
+using ApiSolcaClase.Helpers.Data;
+using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.Security;
 using ApiSolcaClase.Validator.Security;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,6 +17,8 @@ namespace ApiSolcaClase.Controllers.Security
     public class RegisterController : ControllerBase
     {
 
+        SecurityBll SecBll;
+
         public static List<UserModelDB> ListUsers = new List<UserModelDB>()
         {
             new UserModelDB(
@@ -23,6 +28,13 @@ namespace ApiSolcaClase.Controllers.Security
                 name: "Jose",
                 email: "jmoran@viamatica.com"
             ),
+            new UserModelDB(
+                id: 2,
+                userName: "pepe",
+                passWord: "1234",
+                name: "Pepe",
+                email: "pepe@viamatica.com"
+            ),
         };
 
         UserValidate UsVald;
@@ -30,6 +42,7 @@ namespace ApiSolcaClase.Controllers.Security
         public RegisterController()
         {
             UsVald = new UserValidate();
+            SecBll = new SecurityBll();
         }
 
        
@@ -37,11 +50,17 @@ namespace ApiSolcaClase.Controllers.Security
         [HttpPost]
         public ResponseModelGeneral Post([FromBody]RegisterRequestModel ReqModel)
         {
-            ResponseModelGeneral ValidD = UsVald.Register(ReqModel);
-            if (ValidD.code != 200) return ValidD;
+            try
+            {
+                ResponseModelGeneral ValidD = UsVald.Register(ReqModel);
+                if (ValidD.code != 200) return ValidD;
 
-
-            return ValidD;
+                return SecBll.SaveUser(ReqModel);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);
+            }
         }
 
     

@@ -3,6 +3,7 @@ using System.Text;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using ApiSolcaClase.Helpers.Models;
 
 namespace ApiSolcaClase.Helpers.Functions
 {
@@ -27,7 +28,7 @@ namespace ApiSolcaClase.Helpers.Functions
             this.DurationSec = DurationSec;
         }
 
-        public string GenerateJwt()
+        public string GenerateJwt(string data)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -35,10 +36,11 @@ namespace ApiSolcaClase.Helpers.Functions
             // Definir los reclamos (Claims) para el JWT
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, Name),
-            new Claim(ClaimTypes.Role, Rol),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+                new Claim(ClaimTypes.Name, Name),
+                new Claim(ClaimTypes.Role, Rol),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("data", data)
+            };
 
             // Crear el token
             var token = new JwtSecurityToken(
@@ -52,6 +54,30 @@ namespace ApiSolcaClase.Helpers.Functions
             // Retornar el token como una cadena
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             return jwtToken;
+        }
+
+        public GeneratorJWTReponseModel DeserializeJwt(string jwt)
+        {
+            try
+            {
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                JwtSecurityToken JsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
+
+                var CompareTime = JsonToken.ValidTo.CompareTo(DateTime.UtcNow);
+
+                if (CompareTime < 0)
+                {
+                    return new GeneratorJWTReponseModel(false, "", "Tiempo de sesión agotado");
+                }
+
+                if (JsonToken != null)
+                {
+                    string dataDes = JsonToken.Claims.FirstOrDefault(x => x.Type == "data").Value;
+                    return new GeneratorJWTReponseModel(true, dataDes, "");
+                }
+            }catch (Exception ex) { }
+
+            return new GeneratorJWTReponseModel(false, "", "Error general");
         }
 
         //static void Main(string[] args)

@@ -1,6 +1,9 @@
 ﻿using ApiSolcaClase.Helpers.Data;
 using ApiSolcaClase.Helpers.Models;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ApiSolcaClase.Helpers.Functions
 {
@@ -11,6 +14,19 @@ namespace ApiSolcaClase.Helpers.Functions
         {
             IConfiguration configuration = HelperGeneral.GetEnvVar().GetSection("dataEncrypt").GetSection(method);
             return new DataEncryptModel(configuration.GetValue<string>("key"), configuration.GetValue<string>("iv"));
+        }
+
+        public string? EncryptDataSession(string text)
+        {
+            DataEncryptModel dataM = GetDataEncrypt(VarHelper.VarEncryptDataSession);
+            string? textT = AES256Encryption.Encrypt(text, dataM.key, dataM.iv);
+            return textT;
+        }
+        public string? DesencryptDataSession(string text)
+        {
+            DataEncryptModel dataM = GetDataEncrypt(VarHelper.VarEncryptDataSession);
+            string? textT = AES256Encryption.Decrypt(text, dataM.key, dataM.iv);
+            return textT;
         }
 
         public string? EncryptPassWord(string text)
@@ -42,7 +58,7 @@ namespace ApiSolcaClase.Helpers.Functions
             //cualquier caracter del conjunto
             Regex caracEsp = new Regex("[!\"#\\$%&'()*+,-./:;=?@\\[\\]^_`{|}~]");
 
-            Boolean cumpleCriterios = false;
+            bool cumpleCriterios = false;
 
             //si no contiene las letras, regresa false
             if (!letras.IsMatch(passwordV))
@@ -65,7 +81,28 @@ namespace ApiSolcaClase.Helpers.Functions
             return true;
         }
 
-        public string GenerateJwt(SessionModel SessionM)
+        public string GenerateJwtSession(SessionModel SessionM)
+        {
+
+            SessionM.Id = EncryptDataSession(SessionM.Id);
+
+
+            IConfiguration Configuration = HelperGeneral.GetEnvVar().GetSection("jwt");
+            JwtGenerator JWTG = new JwtGenerator(
+                SecretKey: Configuration.GetValue<string>("secretKey"),
+                Name: Configuration.GetValue<string>("name"),
+                Rol: Configuration.GetValue<string>("rol"),
+                Issuer: Configuration.GetValue<string>("issuer"),
+                Audience: Configuration.GetValue<string>("audience"),
+                DurationSec: Configuration.GetValue<int>("durationSec")
+            );
+
+            string DataJ = JsonConvert.SerializeObject(SessionM);
+
+            return JWTG.GenerateJwt(DataJ);
+        }
+
+        public GeneratorJWTReponseModel? ReadJwtSession(string Jwt, out SessionModel? DataSesRet)
         {
             IConfiguration Configuration = HelperGeneral.GetEnvVar().GetSection("jwt");
             JwtGenerator JWTG = new JwtGenerator(
@@ -77,7 +114,22 @@ namespace ApiSolcaClase.Helpers.Functions
                 DurationSec: Configuration.GetValue<int>("durationSec")
             );
 
-            return JWTG.GenerateJwt();
+            GeneratorJWTReponseModel DataSessionT = JWTG.DeserializeJwt(Jwt);
+
+            if (!DataSessionT.isOk)
+            {
+                DataSesRet = null;
+                return DataSessionT;
+            }
+
+            string? DataSession = DataSessionT.data;
+
+            SessionModel DatSesJson = JsonConvert.DeserializeObject<SessionModel>(DataSession);
+
+            DatSesJson.Id = DesencryptDataSession(DatSesJson.Id);
+
+            DataSesRet = DatSesJson;
+            return DataSessionT;
         }
     }
 }

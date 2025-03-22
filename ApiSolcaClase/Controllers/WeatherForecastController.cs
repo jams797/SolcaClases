@@ -16,6 +16,8 @@ public class WeatherForecastController : ControllerBase
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
+    List<string> ListS = new List<string>() { "Manzana", "Pera", "Melon" };
+
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly IConfiguration _configuration;
     private WeatherForecastValidate Valid;
@@ -28,15 +30,27 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    //public IEnumerable<WeatherForecast> Get()
+    //{
+    //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+    //    {
+    //        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+    //        TemperatureC = Random.Shared.Next(-20, 55),
+    //        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+    //    })
+    //    .ToArray();
+    //}
+    public List<string> Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        ListS.Add("Piña");
+
+        List<string> Lista2 = new List<string>() { "Uvas", "Sandia"};
+
+        ListS.AddRange(Lista2);
+
+        ListS = ListS.Where(item => item.ToLower().Contains("A".ToLower())).ToList();
+
+        return ListS;
     }
 
 

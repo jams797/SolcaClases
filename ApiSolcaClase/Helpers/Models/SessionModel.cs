@@ -2,10 +2,10 @@
 {
     public class SessionModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string UserName { get; set; }
 
-        public SessionModel(int id, string userName)
+        public SessionModel(string id, string userName)
         {
             Id = id;
             UserName = userName;

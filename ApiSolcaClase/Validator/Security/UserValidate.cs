@@ -27,6 +27,15 @@ namespace ApiSolcaClase.Validator.Security
             return new ResponseModelGeneral(200, "");
         }
 
+        public ResponseModelGeneral UpdateNameUSer(UpdateNameFromUserModelRequest ReqModel)
+        {
+
+            ResponseModelGeneral ValName = ValidH.ValidResp(ReqModel.Name, "Name", 25, 4);
+            if (ValName.code != 200) return ValName;
+
+            return new ResponseModelGeneral(200, "");
+        }
+
         public ResponseModelGeneral Register(RegisterRequestModel ReqModel)
         {
 
@@ -40,6 +49,11 @@ namespace ApiSolcaClase.Validator.Security
             if (ValPassR.code != 200) return ValPassR;
 
             if (ReqModel.Pass != ReqModel.PassR) return new ResponseModelGeneral(400, MessageHelper.CredentialsNotMach);
+
+            ResponseModelGeneral ValName = ValidH.ValidResp(ReqModel.Name, "Name", 25, 4);
+            if (ValName.code != 200) return ValName;
+            ResponseModelGeneral ValEmail = ValidH.ValidResp(ReqModel.Email, "Email", 50, 8, ListRegExp: new List<string> { VarHelper.RegExpEmail }, ListMsjRegExp: new List<string>() { "El parametro de Email no coincide con un correo válido" });
+            if (ValEmail.code != 200) return ValEmail;
 
             return new ResponseModelGeneral(200, "");
         }
