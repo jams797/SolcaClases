@@ -2,6 +2,7 @@ using ApiSolcaClase.Bll.WeatherForecast;
 using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.WeatherForecast;
+using ApiSolcaClase.Models.DB;
 using ApiSolcaClase.Validator.WeatherForecast;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace ApiSolcaClase.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    private readonly ModelContext _DbContext;
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -20,13 +22,16 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly IConfiguration _configuration;
+    private readonly IWeatherForecastBll WeatherBll;
     private WeatherForecastValidate Valid;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, ModelContext DbContext, IWeatherForecastBll weatherBll)
     {
         Valid = new WeatherForecastValidate();
         _logger = logger;
         _configuration = configuration;
+        _DbContext = DbContext;
+        WeatherBll = weatherBll;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -54,15 +59,21 @@ public class WeatherForecastController : ControllerBase
     }
 
 
-    [HttpPost]
-    public ResponseModelGeneral Post([FromBody] WheatherForecastRequestModel resqModel)
+    //[HttpPost]
+    //public ResponseModelGeneral Post([FromBody] WheatherForecastRequestModel resqModel)
+    //{
+    //    ResponseModelGeneral ValidD = Valid.ValidatePost(resqModel);
+    //    if (ValidD.code != 200) return ValidD;
+
+
+    //    WeatherForecastBll bll = new WeatherForecastBll(_configuration);
+
+    //    return bll.DecryptPass(resqModel);
+    //}
+
+    [HttpPut]
+    public List<Users> Put()
     {
-        ResponseModelGeneral ValidD = Valid.ValidatePost(resqModel);
-        if (ValidD.code != 200) return ValidD;
-
-
-        WeatherForecastBll bll = new WeatherForecastBll(_configuration);
-
-        return bll.DecryptPass(resqModel);
+        return WeatherBll.GetListUsers();
     }
 }

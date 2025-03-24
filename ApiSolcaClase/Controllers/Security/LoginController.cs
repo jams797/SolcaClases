@@ -16,10 +16,12 @@ namespace ApiSolcaClase.Controllers.Security
     {
 
         UserValidate UsVald;
+        private readonly ISecurityBll SecBll;
 
-        public LoginController()
+        public LoginController(ISecurityBll securityBll)
         {
             UsVald = new UserValidate();
+            SecBll = securityBll;
         }
 
        
@@ -33,7 +35,7 @@ namespace ApiSolcaClase.Controllers.Security
                 if (ValidD.code != 200) return ValidD;
 
 
-                return (new SecurityBll()).Login(LogReq);
+                return SecBll.Login(LogReq);
             } catch (Exception ex)
             {
                 return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);

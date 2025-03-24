@@ -17,12 +17,12 @@ namespace ApiSolcaClase.Controllers.Security
     //[ServiceFilter(typeof(SessionFilter))]
     public class DataUserController : ControllerBase
     {
-        private SecurityBll SecBll;
+        private readonly ISecurityBll SecBll;
         private UserValidate UsVald;
 
-        public DataUserController()
+        public DataUserController(ISecurityBll SecBll)
         {
-            SecBll = new SecurityBll();
+            this.SecBll = SecBll;
             UsVald = new UserValidate();
         }
 
@@ -63,6 +63,7 @@ namespace ApiSolcaClase.Controllers.Security
             return "Name: " + name + " Id: " + id + " NameP: " + ReqModel.Name;
         }
 
+        [HttpPut]
         public ResponseModelGeneral Put([FromBody] UpdateNameFromUserModelRequest ReqModel)
         {
             try

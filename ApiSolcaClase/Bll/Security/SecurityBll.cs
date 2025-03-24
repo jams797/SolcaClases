@@ -3,24 +3,35 @@ using ApiSolcaClase.Helpers.Data;
 using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.Security;
+using ApiSolcaClase.Models.DB;
+using ApiSolcaClase.Repository.MUsers;
 
 namespace ApiSolcaClase.Bll.Security
 {
-    public class SecurityBll
+    public class SecurityBll : ISecurityBll
     {
+        public readonly IUserRepository UserRep;
+
+        public SecurityBll(IUserRepository userRep)
+        {
+            UserRep = userRep;
+        }
+
         public ResponseModelGeneral Login(LoginRequestModel LogReqMod)
         {
-            UserModelDB? UserDB = RegisterController.ListUsers.FirstOrDefault(x => x.UserName == LogReqMod.User && x.PassWord == LogReqMod.Pass);
+            string PasswordEncr = (new HelperGeneral()).EncryptPassWord(LogReqMod.Pass);
+
+            Users? UserDB = UserRep.Login(LogReqMod.User, PasswordEncr);
 
             if(UserDB != null)
             {
                 SessionModel SessionM = new SessionModel(
                     id: UserDB.Id.ToString(),
-                    userName: UserDB.UserName
+                    userName: UserDB.Username
                 );
                 string Token = (new HelperGeneral()).GenerateJwtSession(SessionM);
                 return new ResponseModelGeneral(200, "", new LoginResponseModel(
-                    id: UserDB.Id,
+                    id: int.Parse(UserDB.Id.ToString()),
                     name: UserDB.Name,
                     token: Token
                 ));
@@ -48,21 +59,25 @@ namespace ApiSolcaClase.Bll.Security
 
         public ResponseModelGeneral SaveUser(RegisterRequestModel ReqM)
         {
-            bool ExistUser = RegisterController.ListUsers.Exists(x => x.UserName == ReqM.User || x.Email == ReqM.Email);
+            bool ExistUser = UserRep.ExistUserByEmailUser(ReqM.Email, ReqM.User);
 
             if (ExistUser) return new ResponseModelGeneral(500, MessageHelper.UserExistAndNotCreated);
 
-            int IdUserNew = (RegisterController.ListUsers.Count() == 0 ? 0 : RegisterController.ListUsers.Max(x => x.Id)) + 1;
+            Users UserDB = new Users();
 
-            UserModelDB UserDB = new UserModelDB(
-                id: IdUserNew,
-                userName: ReqM.User,
-                passWord: ReqM.Pass,
-                name: ReqM.Name,
-                email: ReqM.Email
-            );
+            string? PasswordEncr = (new HelperGeneral()).EncryptPassWord(ReqM.Pass);
 
-            RegisterController.ListUsers.Add(UserDB);
+            UserDB.Username = ReqM.User;
+            UserDB.Name = ReqM.Name;
+            UserDB.Pass = PasswordEncr;
+            UserDB.Email = ReqM.Email;
+
+            bool CreatedUser = UserRep.RegisterUSer(UserDB);
+
+            if(!CreatedUser)
+            {
+                return new ResponseModelGeneral(500, MessageHelper.UserErrorCreated);
+            }
 
             return new ResponseModelGeneral(200, MessageHelper.UserCreated);
         }

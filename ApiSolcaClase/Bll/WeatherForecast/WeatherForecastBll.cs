@@ -2,17 +2,21 @@
 using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.WeatherForecast;
+using ApiSolcaClase.Models.DB;
+using ApiSolcaClase.Repository.MUsers;
 using Microsoft.Extensions.Configuration;
 
 namespace ApiSolcaClase.Bll.WeatherForecast
 {
-    public class WeatherForecastBll
+    public class WeatherForecastBll : IWeatherForecastBll
     {
+        private readonly IUserRepository UserRep;
         private readonly IConfiguration _configuration;
 
-        public WeatherForecastBll(IConfiguration configuration)
+        public WeatherForecastBll(IConfiguration configuration, IUserRepository UserRep)
         {
             _configuration = configuration;
+            this.UserRep = UserRep;
         }
 
 
@@ -38,6 +42,11 @@ namespace ApiSolcaClase.Bll.WeatherForecast
                     MessageHelper.ErrorPasswordDesencrypt
                 );
             }
+        }
+
+        public List<Users> GetListUsers()
+        {
+            return UserRep.GetListUsers();
         }
     }
 }

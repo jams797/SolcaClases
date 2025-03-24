@@ -17,7 +17,7 @@ namespace ApiSolcaClase.Controllers.Security
     public class RegisterController : ControllerBase
     {
 
-        SecurityBll SecBll;
+        private readonly ISecurityBll SecBll;
 
         public static List<UserModelDB> ListUsers = new List<UserModelDB>()
         {
@@ -39,10 +39,10 @@ namespace ApiSolcaClase.Controllers.Security
 
         UserValidate UsVald;
 
-        public RegisterController()
+        public RegisterController(ISecurityBll SecBll)
         {
             UsVald = new UserValidate();
-            SecBll = new SecurityBll();
+            this.SecBll = SecBll;
         }
 
        
