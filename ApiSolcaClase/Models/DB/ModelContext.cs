@@ -18,7 +18,10 @@ namespace ApiSolcaClase.Models.DB
             : base(options)
         {
         }
-        public virtual DbSet<Users> Users { get; set; }
+
+        public virtual DbSet<Empleados> Empleados { get; set; }
+        public virtual DbSet<Roluser> Roluser { get; set; }
+        public virtual DbSet<Userssys> Userssys { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,9 +36,78 @@ namespace ApiSolcaClase.Models.DB
         {
             modelBuilder.HasAnnotation("Relational:DefaultSchema", "CURSO_SOLCA");
 
-            modelBuilder.Entity<Users>(entity =>
+            modelBuilder.Entity<Empleados>(entity =>
             {
-                entity.ToTable("USERS");
+                entity.HasKey(e => e.IdEmpleado)
+                    .HasName("SYS_C006998");
+
+                entity.ToTable("EMPLEADOS");
+
+                entity.Property(e => e.IdEmpleado)
+                    .HasColumnName("ID_EMPLEADO")
+                    .HasColumnType("NUMBER");
+
+                entity.Property(e => e.Apellido)
+                    .HasColumnName("APELLIDO")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Departamento)
+                    .HasColumnName("DEPARTAMENTO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaIngreso)
+                    .HasColumnName("FECHA_INGRESO")
+                    .HasColumnType("DATE")
+                    .HasDefaultValueSql(@"SYSDATE    -- Fecha de ingreso con valor por defecto (fecha actual)
+");
+
+                entity.Property(e => e.FechaNacimiento)
+                    .HasColumnName("FECHA_NACIMIENTO")
+                    .HasColumnType("DATE");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasColumnName("NOMBRE")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Salario)
+                    .HasColumnName("SALARIO")
+                    .HasColumnType("NUMBER(10,2)");
+            });
+
+            modelBuilder.Entity<Roluser>(entity =>
+            {
+                entity.HasKey(e => e.Idrol)
+                    .HasName("ROLUSER_PK");
+
+                entity.ToTable("ROLUSER");
+
+                entity.HasIndex(e => e.Namerol)
+                    .HasName("ROLUSER_NAME_IDX")
+                    .IsUnique();
+
+                entity.Property(e => e.Idrol)
+                    .HasColumnName("IDROL")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Namerol)
+                    .IsRequired()
+                    .HasColumnName("NAMEROL")
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Userssys>(entity =>
+            {
+                entity.HasKey(e => e.Iduser)
+                    .HasName("USERS_PK");
+
+                entity.ToTable("USERSSYS");
 
                 entity.HasIndex(e => e.Email)
                     .HasName("USERS_EMAIL")
@@ -45,8 +117,8 @@ namespace ApiSolcaClase.Models.DB
                     .HasName("USERS_USER")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.Iduser)
+                    .HasColumnName("IDUSER")
                     .HasColumnType("NUMBER(38)")
                     .ValueGeneratedOnAdd();
 
@@ -57,9 +129,14 @@ namespace ApiSolcaClase.Models.DB
                     .IsUnicode(false)
                     .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Idrol)
+                    .HasColumnName("IDROL")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Nameperson)
                     .IsRequired()
-                    .HasColumnName("NAME")
+                    .HasColumnName("NAMEPERSON")
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .ValueGeneratedOnAdd();
@@ -79,7 +156,11 @@ namespace ApiSolcaClase.Models.DB
                     .ValueGeneratedOnAdd();
             });
 
+            modelBuilder.HasSequence("ROLUSER_SEQ");
+
             modelBuilder.HasSequence("USERS_SEQ");
+
+            modelBuilder.HasSequence("USERSSYS_SEQ");
 
             OnModelCreatingPartial(modelBuilder);
         }

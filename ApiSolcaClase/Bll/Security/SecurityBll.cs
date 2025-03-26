@@ -21,18 +21,18 @@ namespace ApiSolcaClase.Bll.Security
         {
             string PasswordEncr = (new HelperGeneral()).EncryptPassWord(LogReqMod.Pass);
 
-            Users? UserDB = UserRep.Login(LogReqMod.User, PasswordEncr);
+            Userssys? UserDB = UserRep.Login(LogReqMod.User, PasswordEncr);
 
-            if(UserDB != null)
+            if (UserDB != null)
             {
                 SessionModel SessionM = new SessionModel(
-                    id: UserDB.Id.ToString(),
+                    id: UserDB.Iduser.ToString(),
                     userName: UserDB.Username
                 );
                 string Token = (new HelperGeneral()).GenerateJwtSession(SessionM);
                 return new ResponseModelGeneral(200, "", new LoginResponseModel(
-                    id: int.Parse(UserDB.Id.ToString()),
-                    name: UserDB.Name,
+                    id: int.Parse(UserDB.Iduser.ToString()),
+                    name: UserDB.Nameperson,
                     token: Token
                 ));
             }
@@ -63,18 +63,20 @@ namespace ApiSolcaClase.Bll.Security
 
             if (ExistUser) return new ResponseModelGeneral(500, MessageHelper.UserExistAndNotCreated);
 
-            Users UserDB = new Users();
+            Userssys UserDB = new Userssys();
 
             string? PasswordEncr = (new HelperGeneral()).EncryptPassWord(ReqM.Pass);
 
+            //UserDB.Id = 12;
             UserDB.Username = ReqM.User;
-            UserDB.Name = ReqM.Name;
+            UserDB.Nameperson = ReqM.Name;
             UserDB.Pass = PasswordEncr;
             UserDB.Email = ReqM.Email;
+            UserDB.Idrol = decimal.Parse(ReqM.IdRol.ToString());
 
             bool CreatedUser = UserRep.RegisterUSer(UserDB);
 
-            if(!CreatedUser)
+            if (!CreatedUser)
             {
                 return new ResponseModelGeneral(500, MessageHelper.UserErrorCreated);
             }

@@ -2,7 +2,6 @@ using ApiSolcaClase.Bll.WeatherForecast;
 using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.WeatherForecast;
-using ApiSolcaClase.Models.DB;
 using ApiSolcaClase.Validator.WeatherForecast;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +11,7 @@ namespace ApiSolcaClase.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
-    private readonly ModelContext _DbContext;
+    //private readonly ModelContext _DbContext;
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -25,12 +24,12 @@ public class WeatherForecastController : ControllerBase
     private readonly IWeatherForecastBll WeatherBll;
     private WeatherForecastValidate Valid;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, ModelContext DbContext, IWeatherForecastBll weatherBll)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IWeatherForecastBll weatherBll)
     {
         Valid = new WeatherForecastValidate();
         _logger = logger;
         _configuration = configuration;
-        _DbContext = DbContext;
+        //_DbContext = DbContext;
         WeatherBll = weatherBll;
     }
 
@@ -71,9 +70,4 @@ public class WeatherForecastController : ControllerBase
     //    return bll.DecryptPass(resqModel);
     //}
 
-    [HttpPut]
-    public List<Users> Put()
-    {
-        return WeatherBll.GetListUsers();
-    }
 }

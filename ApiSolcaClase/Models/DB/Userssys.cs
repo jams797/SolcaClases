@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 namespace ApiSolcaClase.Models.DB
 {
-    public partial class Users
+    public partial class Userssys
     {
-        public decimal IdUser { get; set; }
+        public decimal Iduser { get; set; }
         public string Username { get; set; }
         public string Pass { get; set; }
-        public string Name { get; set; }
+        public string Nameperson { get; set; }
         public string Email { get; set; }
         public decimal Idrol { get; set; }
     }

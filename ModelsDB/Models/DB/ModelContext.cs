@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace PruebaAplicativo.Models.DB
+namespace ModelsDB.Models.DB
 {
     public partial class ModelContext : DbContext
     {
@@ -20,6 +20,7 @@ namespace PruebaAplicativo.Models.DB
         }
 
         public virtual DbSet<Empleados> Empleados { get; set; }
+        public virtual DbSet<Roluser> Roluser { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -77,6 +78,30 @@ namespace PruebaAplicativo.Models.DB
                     .HasColumnType("NUMBER(10,2)");
             });
 
+            modelBuilder.Entity<Roluser>(entity =>
+            {
+                entity.HasKey(e => e.Idrol)
+                    .HasName("ROLUSER_PK");
+
+                entity.ToTable("ROLUSER");
+
+                entity.HasIndex(e => e.Namerol)
+                    .HasName("ROLUSER_NAME_IDX")
+                    .IsUnique();
+
+                entity.Property(e => e.Idrol)
+                    .HasColumnName("IDROL")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Namerol)
+                    .IsRequired()
+                    .HasColumnName("NAMEROL")
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .ValueGeneratedOnAdd();
+            });
+
             modelBuilder.Entity<Users>(entity =>
             {
                 entity.ToTable("USERS");
@@ -101,6 +126,11 @@ namespace PruebaAplicativo.Models.DB
                     .IsUnicode(false)
                     .ValueGeneratedOnAdd();
 
+                entity.Property(e => e.Idrol)
+                    .HasColumnName("IDROL")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("NAME")
@@ -122,6 +152,8 @@ namespace PruebaAplicativo.Models.DB
                     .IsUnicode(false)
                     .ValueGeneratedOnAdd();
             });
+
+            modelBuilder.HasSequence("ROLUSER_SEQ");
 
             modelBuilder.HasSequence("USERS_SEQ");
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace PruebaAplicativo.Models.DB
+namespace ApiSolcaClase.Models.DB
 {
     public partial class Empleados
     {

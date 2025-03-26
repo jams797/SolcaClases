@@ -1,5 +1,10 @@
-﻿using ApiSolcaClase.Models.DB;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Data.Common;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using ApiSolcaClase.Models.DB;
 
 namespace ApiSolcaClase.Repository.MUsers
 {
@@ -13,28 +18,42 @@ namespace ApiSolcaClase.Repository.MUsers
 
         public bool ExistUserByEmailUser(string Email, string User)
         {
-            return db.Users.Any(x => x.Username == User || x.Email == Email);
+            return db.Userssys.Any(x => x.Username == User || x.Email == Email);
         }
 
-        public List<Users> GetListUsers()
+        public List<Userssys> GetListUsers()
         {
-            return db.Users.ToList();
+            return db.Userssys.ToList();
         }
 
-        public Users? Login(string Username, string Pass)
+        public Userssys? Login(string Username, string Pass)
         {
-            return db.Users.Where(x => x.Username == Username && x.Pass == Pass).ToList().FirstOrDefault();
+            return db.Userssys.Where(x => x.Username == Username && x.Pass == Pass).ToList().FirstOrDefault();
+            //return db.Query<Users>().AsNoTracking().FromSql("").FirstOrDefault();
+
+            //    DbCommand cmd = db.Database.GetDbConnection().CreateCommand();
+
+            //    cmd.CommandText = "Login";
+            //    cmd.CommandType = CommandType.StoredProcedure;
+
+            //    cmd.Parameters.Add(new SqlParameter("@firstName", SqlDbType.VarChar) { Value = "Steve" });
+            //    cmd.Parameters.Add(new SqlParameter("@lastName", SqlDbType.VarChar) { Value = "Smith" });
+
+            //    cmd.Parameters.Add(new SqlParameter("@id", SqlDbType.BigInt) { Direction = ParameterDirection.Output });
         }
 
-        public bool RegisterUSer(Users UserM)
+        public bool RegisterUSer(Userssys UserM)
         {
             try
             {
-                db.Users.Add(UserM);
+                //string StringSql = $"INSERT INTO USERSSYS (USERNAME,NAMEPERSON,PASS,EMAIL,IDROL) VALUES ('{UserM.Username}', '{UserM.Name}', '{UserM.Pass}', '{UserM.Email}', {UserM.Idrol})";
+                db.Userssys.Add(UserM);
+                //db.Database.ExecuteSqlCommand(StringSql);
                 db.SaveChanges();
                 return true;
-            }catch (Exception ex)
-            {
+            }
+            catch (Exception ex)
+            {               
                 return false;
             }
         }

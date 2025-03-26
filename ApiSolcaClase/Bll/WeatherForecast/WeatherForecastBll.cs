@@ -2,7 +2,6 @@
 using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.WeatherForecast;
-using ApiSolcaClase.Models.DB;
 using ApiSolcaClase.Repository.MUsers;
 using Microsoft.Extensions.Configuration;
 
@@ -44,9 +43,9 @@ namespace ApiSolcaClase.Bll.WeatherForecast
             }
         }
 
-        public List<Users> GetListUsers()
-        {
-            return UserRep.GetListUsers();
-        }
+        //public List<Users> GetListUsers()
+        //{
+        //    return UserRep.GetListUsers();
+        //}
     }
 }

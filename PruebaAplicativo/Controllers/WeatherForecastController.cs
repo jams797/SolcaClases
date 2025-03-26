@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PruebaAplicativo.Models.DB;
 
 namespace PruebaAplicativo.Controllers;
 
@@ -20,18 +19,5 @@ public class WeatherForecastController : ControllerBase
     {
         _logger = logger;
         this.service = service;
-    }
-
-    [HttpGet(Name = "GetWeatherForecast")]
-    public List<Users> Get()
-    {
-        return service.GetUsers();
-        //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //{
-        //    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        //    TemperatureC = Random.Shared.Next(-20, 55),
-        //    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //})
-        //.ToArray();
     }
 }

@@ -15,7 +15,7 @@ namespace ApiSolcaClase.Controllers.Security
     [Route("api/Security/[controller]")]
     [ApiController]
     public class RegisterController : ControllerBase
-    {
+    { 
 
         private readonly ISecurityBll SecBll;
 

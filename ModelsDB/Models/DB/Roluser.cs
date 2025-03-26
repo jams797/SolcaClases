@@ -5,15 +5,11 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace ApiSolcaClase.Models.DB
+namespace ModelsDB.Models.DB
 {
-    public partial class Users
+    public partial class Roluser
     {
-        public decimal IdUser { get; set; }
-        public string Username { get; set; }
-        public string Pass { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
         public decimal Idrol { get; set; }
+        public string Namerol { get; set; }
     }
 }

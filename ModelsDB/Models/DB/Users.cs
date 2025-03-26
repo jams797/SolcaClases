@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace PruebaAplicativo.Models.DB
+namespace ModelsDB.Models.DB
 {
     public partial class Users
     {
@@ -14,5 +14,6 @@ namespace PruebaAplicativo.Models.DB
         public string Pass { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public decimal Idrol { get; set; }
     }
 }
