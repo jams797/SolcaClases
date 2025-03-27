@@ -11,10 +11,12 @@ namespace ApiSolcaClase.Bll.Security
     public class SecurityBll : ISecurityBll
     {
         public readonly IUserRepository UserRep;
+        private readonly ModelContext db;
 
-        public SecurityBll(IUserRepository userRep)
+        public SecurityBll(IUserRepository userRep, ModelContext db)
         {
             UserRep = userRep;
+            this.db = db;
         }
 
         public ResponseModelGeneral Login(LoginRequestModel LogReqMod)
@@ -25,6 +27,8 @@ namespace ApiSolcaClase.Bll.Security
 
             if (UserDB != null)
             {
+                string? NameUser = UserRep.NameUserById(int.Parse(UserDB.Iduser.ToString()));
+
                 SessionModel SessionM = new SessionModel(
                     id: UserDB.Iduser.ToString(),
                     userName: UserDB.Username
@@ -32,7 +36,7 @@ namespace ApiSolcaClase.Bll.Security
                 string Token = (new HelperGeneral()).GenerateJwtSession(SessionM);
                 return new ResponseModelGeneral(200, "", new LoginResponseModel(
                     id: int.Parse(UserDB.Iduser.ToString()),
-                    name: UserDB.Nameperson,
+                    name: NameUser,
                     token: Token
                 ));
             }
@@ -73,6 +77,7 @@ namespace ApiSolcaClase.Bll.Security
             UserDB.Pass = PasswordEncr;
             UserDB.Email = ReqM.Email;
             UserDB.Idrol = decimal.Parse(ReqM.IdRol.ToString());
+            UserDB.Balance = 500;
 
             bool CreatedUser = UserRep.RegisterUSer(UserDB);
 
@@ -80,6 +85,7 @@ namespace ApiSolcaClase.Bll.Security
             {
                 return new ResponseModelGeneral(500, MessageHelper.UserErrorCreated);
             }
+
 
             return new ResponseModelGeneral(200, MessageHelper.UserCreated);
         }

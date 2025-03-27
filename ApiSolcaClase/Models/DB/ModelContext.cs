@@ -19,7 +19,9 @@ namespace ApiSolcaClase.Models.DB
         {
         }
 
-        public virtual DbSet<Empleados> Empleados { get; set; }
+        public virtual DbSet<Invoice> Invoice { get; set; }
+        public virtual DbSet<InvoiceDetail> InvoiceDetail { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Roluser> Roluser { get; set; }
         public virtual DbSet<Userssys> Userssys { get; set; }
 
@@ -36,46 +38,97 @@ namespace ApiSolcaClase.Models.DB
         {
             modelBuilder.HasAnnotation("Relational:DefaultSchema", "CURSO_SOLCA");
 
-            modelBuilder.Entity<Empleados>(entity =>
+            modelBuilder.Entity<Invoice>(entity =>
             {
-                entity.HasKey(e => e.IdEmpleado)
-                    .HasName("SYS_C006998");
+                entity.HasKey(e => e.Idfact)
+                    .HasName("FACTURA_PK");
 
-                entity.ToTable("EMPLEADOS");
+                entity.ToTable("INVOICE");
 
-                entity.Property(e => e.IdEmpleado)
-                    .HasColumnName("ID_EMPLEADO")
-                    .HasColumnType("NUMBER");
+                entity.Property(e => e.Idfact)
+                    .HasColumnName("IDFACT")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Apellido)
-                    .HasColumnName("APELLIDO")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Departamento)
-                    .HasColumnName("DEPARTAMENTO")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FechaIngreso)
-                    .HasColumnName("FECHA_INGRESO")
+                entity.Property(e => e.Fecha)
+                    .HasColumnName("FECHA")
                     .HasColumnType("DATE")
-                    .HasDefaultValueSql(@"SYSDATE    -- Fecha de ingreso con valor por defecto (fecha actual)
-");
+                    .ValueGeneratedOnAdd();
+            });
 
-                entity.Property(e => e.FechaNacimiento)
-                    .HasColumnName("FECHA_NACIMIENTO")
-                    .HasColumnType("DATE");
+            modelBuilder.Entity<InvoiceDetail>(entity =>
+            {
+                entity.HasKey(e => e.Idinvoicedetail)
+                    .HasName("INVOICE_DETAIL_PK");
 
-                entity.Property(e => e.Nombre)
+                entity.ToTable("INVOICE_DETAIL");
+
+                entity.Property(e => e.Idinvoicedetail)
+                    .HasColumnName("IDINVOICEDETAIL")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Idinvoice)
+                    .HasColumnName("IDINVOICE")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Idproduct)
+                    .HasColumnName("IDPRODUCT")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Price)
+                    .HasColumnName("PRICE")
+                    .HasColumnType("NUMBER(10,4)")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Qty)
+                    .HasColumnName("QTY")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedNever();
+
+                entity.HasOne(d => d.IdinvoicedetailNavigation)
+                    .WithOne(p => p.InvoiceDetail)
+                    .HasForeignKey<InvoiceDetail>(d => d.Idinvoicedetail)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("INVOICE_DETAIL_FK2");
+
+                entity.HasOne(d => d.IdproductNavigation)
+                    .WithMany(p => p.InvoiceDetail)
+                    .HasForeignKey(d => d.Idproduct)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("INVOICE_DETAIL_FK1");
+            });
+
+            modelBuilder.Entity<Products>(entity =>
+            {
+                entity.HasKey(e => e.Idproduct)
+                    .HasName("PRODUCTS_PK");
+
+                entity.ToTable("PRODUCTS");
+
+                entity.Property(e => e.Idproduct)
+                    .HasColumnName("IDPRODUCT")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Nameproduct)
                     .IsRequired()
-                    .HasColumnName("NOMBRE")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasColumnName("NAMEPRODUCT")
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Salario)
-                    .HasColumnName("SALARIO")
-                    .HasColumnType("NUMBER(10,2)");
+                entity.Property(e => e.Price)
+                    .HasColumnName("PRICE")
+                    .HasColumnType("NUMBER(10,4)")
+                    .HasDefaultValueSql("NULL ");
+
+                entity.Property(e => e.Qty)
+                    .HasColumnName("QTY")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Roluser>(entity =>
@@ -122,6 +175,11 @@ namespace ApiSolcaClase.Models.DB
                     .HasColumnType("NUMBER(38)")
                     .ValueGeneratedOnAdd();
 
+                entity.Property(e => e.Balance)
+                    .HasColumnName("BALANCE")
+                    .HasColumnType("NUMBER(10,4)")
+                    .ValueGeneratedNever();
+
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasColumnName("EMAIL")
@@ -154,7 +212,19 @@ namespace ApiSolcaClase.Models.DB
                     .HasMaxLength(25)
                     .IsUnicode(false)
                     .ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.IdrolNavigation)
+                    .WithMany(p => p.Userssys)
+                    .HasForeignKey(d => d.Idrol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("USERSSYS_FK1");
             });
+
+            modelBuilder.HasSequence("INVOICE_DETAIL_SEQ");
+
+            modelBuilder.HasSequence("INVOICE_SEQ");
+
+            modelBuilder.HasSequence("PRODUCTS_SEQ");
 
             modelBuilder.HasSequence("ROLUSER_SEQ");
 

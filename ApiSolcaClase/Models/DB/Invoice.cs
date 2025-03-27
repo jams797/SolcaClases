@@ -7,16 +7,11 @@ using System.Collections.Generic;
 
 namespace ApiSolcaClase.Models.DB
 {
-    public partial class Roluser
+    public partial class Invoice
     {
-        public Roluser()
-        {
-            Userssys = new HashSet<Userssys>();
-        }
+        public decimal Idfact { get; set; }
+        public DateTime Fecha { get; set; }
 
-        public decimal Idrol { get; set; }
-        public string Namerol { get; set; }
-
-        public virtual ICollection<Userssys> Userssys { get; set; }
+        public virtual InvoiceDetail InvoiceDetail { get; set; }
     }
 }

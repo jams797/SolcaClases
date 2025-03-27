@@ -15,5 +15,8 @@ namespace ApiSolcaClase.Models.DB
         public string Nameperson { get; set; }
         public string Email { get; set; }
         public decimal Idrol { get; set; }
+        public decimal Balance { get; set; }
+
+        public virtual Roluser IdrolNavigation { get; set; }
     }
 }
