@@ -1,7 +1,11 @@
+using ApiSolcaClase.Bll.Invoice;
 using ApiSolcaClase.Bll.Security;
 using ApiSolcaClase.Bll.WeatherForecast;
 using ApiSolcaClase.Filters;
 using ApiSolcaClase.Models.DB;
+using ApiSolcaClase.Repository.MInvoice;
+using ApiSolcaClase.Repository.MInvoiceDetail;
+using ApiSolcaClase.Repository.MProduct;
 using ApiSolcaClase.Repository.MUsers;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +27,12 @@ builder.Services.AddDbContext<ModelContext>((options) => options.UseOracle(build
 // Interfaces - Bll
 builder.Services.AddScoped<IWeatherForecastBll, WeatherForecastBll>();
 builder.Services.AddScoped<ISecurityBll, SecurityBll>();
+builder.Services.AddScoped<IInvoiceBll, InvoiceBll>();
 // Interfaces - Rep
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceDetailRepository, InvoiceDetailRepository>();
 
 //builder.Services.AddControllers(options => {
 //        options.Filters.Add<SessionFilter>();

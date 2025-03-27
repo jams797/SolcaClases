@@ -18,7 +18,8 @@ namespace ApiSolcaClase.Repository.MProduct
 
         public bool VerifyProductsByListIds(List<int> Ids)
         {
-            var IdProdF = db.Products.Where(x => Ids.Contains(int.Parse(x.Idproduct.ToString()))).Select(x => x.Idproduct).ToList();
+            //var IdProdF = db.Products.Where(x => Ids.Contains(int.Parse(x.Idproduct.ToString()))).Select(x => x.Idproduct).ToList();
+            var IdProdF = db.Products.Where(x => Ids.Any(y => y == int.Parse(x.Idproduct.ToString()))).Select(x => x.Idproduct).ToList();
             return IdProdF.Count() == Ids.Count();
         }
     }

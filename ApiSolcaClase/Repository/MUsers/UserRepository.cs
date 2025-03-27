@@ -17,6 +17,11 @@ namespace ApiSolcaClase.Repository.MUsers
             db = dbModel;
         }
 
+        public Userssys FindUserExistById(int id)
+        {
+            return db.Userssys.Where(x => x.Iduser == id).ToList().First();
+        }
+
         public bool ExistUserByEmailUser(string Email, string User)
         {
             return db.Userssys.Any(x => x.Username == User || x.Email == Email);
@@ -89,5 +94,20 @@ namespace ApiSolcaClase.Repository.MUsers
                 return false;
             }
         }
+
+        public bool UpdateBalancePerson(int idUser, decimal NewBal)
+        {
+            Userssys UserS = FindUserExistById(idUser);
+            try
+            {
+                UserS.Balance = NewBal;
+                db.SaveChanges();
+                return true;
+            } catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
     }
 }

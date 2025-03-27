@@ -7,6 +7,7 @@
         public static string ErrorPasswordDesencrypt = "Ocurrio un error al desencriptar los datos";
 
         public static string ProductNotFound = "El producto seleccionado no existe";
+        public static string ProductOutRangeByQty = "La cantidad del producto seleccionado excede el stock";
 
         public static string CredentialsNotMach = "Las contraseñas no coinciden entre sí";
         public static string CredentialsNotStrong = "La contraseña no es segura debe tener letras, numeros y caracteres especiales";

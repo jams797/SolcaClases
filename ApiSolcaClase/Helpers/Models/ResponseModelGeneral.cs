@@ -1,13 +1,19 @@
 ﻿using ApiSolcaClase.Helpers.Functions;
+using ApiSolcaClase.Models.DB;
 
 namespace ApiSolcaClase.Helpers.Models
 {
     public class ResponseModelGeneral
     {
-        public ResponseModelGeneral(int code, string message, dynamic data = null, string messageDev = "")
+        public ResponseModelGeneral(int code, string message, dynamic data = null, string messageDev = "", ModelContext? db = null, bool ExecuteRollback = false)
         {
             IConfiguration configuration = HelperGeneral.GetEnvVar();
             bool isDebug = configuration.GetValue<bool>("isDebug");
+
+            if(ExecuteRollback)
+            {
+                db.Database.RollbackTransaction();
+            }
 
             this.code = code;
             this.message = message;
