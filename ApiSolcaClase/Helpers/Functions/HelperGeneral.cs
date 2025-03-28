@@ -10,6 +10,12 @@ namespace ApiSolcaClase.Helpers.Functions
     public class HelperGeneral
     {
 
+        public static string GetUrlService(string service)
+        {
+            IConfiguration configuration = HelperGeneral.GetEnvVar().GetSection("Services");
+            return configuration.GetValue<string>(service) ?? "";
+        }
+
         public DataEncryptModel GetDataEncrypt(string method)
         {
             IConfiguration configuration = HelperGeneral.GetEnvVar().GetSection("dataEncrypt").GetSection(method);

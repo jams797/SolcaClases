@@ -20,5 +20,12 @@
         public static string NotAuthorized = "Session no authorizada";
 
         public static string ErrorParamsGeneral = "Uno de los parametros es incorrecto";
+
+
+
+
+
+        public static string MailLoginSubject = "Se detecto un inicio de sesión";
+        public static string MailLoginMessage = "Se detecto un nuevo inicio de sesión";
     }
 }

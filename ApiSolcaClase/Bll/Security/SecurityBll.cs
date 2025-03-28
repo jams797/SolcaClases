@@ -34,6 +34,13 @@ namespace ApiSolcaClase.Bll.Security
                     userName: UserDB.Username
                 );
                 string Token = (new HelperGeneral()).GenerateJwtSession(SessionM);
+
+                SmtpServiceSendModel SmtpModel = new SmtpServiceSendModel();
+                SmtpModel.To = new string[] { UserDB.Email };
+                SmtpModel.Subject = MessageHelper.MailLoginSubject;
+                SmtpModel.Message = MessageHelper.MailLoginMessage;
+                (new HttpHelper()).SendHttp(HelperGeneral.GetUrlService("smtp") + VarHelper.EndpointSmtpSend, "POST", SmtpModel.ToJson());
+
                 return new ResponseModelGeneral(200, "", new LoginResponseModel(
                     id: int.Parse(UserDB.Iduser.ToString()),
                     name: NameUser,
