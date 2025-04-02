@@ -2,11 +2,13 @@ using ApiSolcaClase.Bll.Invoice;
 using ApiSolcaClase.Bll.Security;
 using ApiSolcaClase.Bll.WeatherForecast;
 using ApiSolcaClase.Filters;
+using ApiSolcaClase.Helpers.Functions;
 using ApiSolcaClase.Models.DB;
 using ApiSolcaClase.Repository.MInvoice;
 using ApiSolcaClase.Repository.MInvoiceDetail;
 using ApiSolcaClase.Repository.MProduct;
 using ApiSolcaClase.Repository.MUsers;
+using ApiSolcaClase.WorkerServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddHttpContextAccessor();
+
 
 // Filters
 builder.Services.AddScoped<SessionFilter>();
@@ -34,12 +40,28 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceDetailRepository, InvoiceDetailRepository>();
 
-//builder.Services.AddControllers(options => {
-//        options.Filters.Add<SessionFilter>();
-//    }
-//);
+// Worker Service
+builder.Services.AddHostedService<KafkaWorkerService>();
+
+// Filter de intercepcion Request
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<MidReqFilter>();
+}
+);
+
+
+// Filter de Result
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new MidResultFilter());
+});
+// [TypeFilter(typeof(CustomResponseFilter))]
 
 var app = builder.Build();
+
+var httpContAc = app.Services.GetRequiredService<IHttpContextAccessor>();
+HttpContextHelper.Initialize(httpContAc);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

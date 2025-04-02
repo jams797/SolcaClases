@@ -4,25 +4,23 @@ using System.Text.RegularExpressions;
 
 namespace ApiSolcaClase.Helpers.Functions
 {
-    public class ValidateHelper
+    public class ValidateHelper<T>
     {
-        public ResponseModelGeneral ValidResp(string Value, string Name, int? Max = null, int? Min = null, List<string>? ListRegExp = null, string? MsjMinV = null, string? MsjMaxV = null, List<string>? ListMsjRegExp = null)
+        public ResponseModelGeneral<T> ValidResp(string Value, string Name, int? Max = null, int? Min = null, List<string>? ListRegExp = null, string? MsjMinV = null, string? MsjMaxV = null, List<string>? ListMsjRegExp = null)
         {
             if(Max != null)
             {
-                if (!MaxLength(Value, Max ?? 0)) return new ResponseModelGeneral(
+                if (!MaxLength(Value, Max ?? 0)) return new ResponseModelGeneral<T>(
                     400,
                     MessageHelper.ErrorParamsGeneral,
-                    null,
                     MsjMaxV ?? "El parametro " + Name + " excede el límite de " + Max + " caracteres"
                 );
             }
             if (Min != null)
             {
-                if (!MinLength(Value, Min ?? 0)) return new ResponseModelGeneral(
+                if (!MinLength(Value, Min ?? 0)) return new ResponseModelGeneral<T>(
                     400,
                     MessageHelper.ErrorParamsGeneral,
-                    null,
                     MsjMinV ?? "El parametro " + Name + " debe tener un mínimo de " + Min + " caracteres"
                 );
             }
@@ -34,10 +32,9 @@ namespace ApiSolcaClase.Helpers.Functions
                     if (!RegExpVald(Value, ListRegExp[i]))
                     {
                         bool isMsjPers = ListMsjRegExp != null ? ListMsjRegExp.Count >= (i - 1) : false;
-                        return new ResponseModelGeneral(
+                        return new ResponseModelGeneral<T>(
                             400,
                             MessageHelper.ErrorParamsGeneral,
-                            null,
                             isMsjPers ? ListMsjRegExp[i] : "El parametro " + Name + " no cumple con la expresión regular " + ListRegExp[i]
                         );
                     }
@@ -45,7 +42,7 @@ namespace ApiSolcaClase.Helpers.Functions
             }
 
 
-            return new ResponseModelGeneral(200, "");
+            return new ResponseModelGeneral<T>(200, "");
         }
 
         bool MaxLength(string Value, int Max)

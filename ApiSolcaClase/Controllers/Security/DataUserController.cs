@@ -28,7 +28,7 @@ namespace ApiSolcaClase.Controllers.Security
 
         // GET: api/<DataUserController>
         [HttpGet]
-        public ResponseModelGeneral Get()
+        public ResponseModelGeneral<GetDataUserResponseModel> Get()
         {
             try {
                 string Authorization = HttpContext.Request.Headers["Authorization"].ToString();
@@ -39,7 +39,7 @@ namespace ApiSolcaClase.Controllers.Security
             }
             catch (Exception ex)
             {
-                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);
+                return new ResponseModelGeneral<GetDataUserResponseModel>(500, MessageHelper.ErrorGeneral);
             }
         }
 
@@ -64,7 +64,7 @@ namespace ApiSolcaClase.Controllers.Security
         }
 
         [HttpPut]
-        public ResponseModelGeneral Put([FromBody] UpdateNameFromUserModelRequest ReqModel)
+        public ResponseModelGeneral<object> Put([FromBody] UpdateNameFromUserModelRequest ReqModel)
         {
             try
             {
@@ -72,14 +72,14 @@ namespace ApiSolcaClase.Controllers.Security
                 SessionModel? SessionM = null;
                 GeneratorJWTReponseModel DatU = (new HelperGeneral()).ReadJwtSession(Authorization, out SessionM);
 
-                ResponseModelGeneral ValidD = UsVald.UpdateNameUSer(ReqModel);
+                ResponseModelGeneral<object> ValidD = UsVald.UpdateNameUSer(ReqModel);
                 if (ValidD.code != 200) return ValidD;
 
                 return SecBll.UpdateNameUserFromId(int.Parse(SessionM.Id), ReqModel.Name);
             }
             catch (Exception ex)
             {
-                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);
+                return new ResponseModelGeneral<object>(500, MessageHelper.ErrorGeneral);
             }
         }
 

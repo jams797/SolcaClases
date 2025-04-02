@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiSolcaClase", "ApiSolcaCl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsDB", "ModelsDB\ModelsDB.csproj", "{4397AA6C-5D49-453E-ACDE-DE819C3E0BAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoLibrary", "MongoLibrary\MongoLibrary.csproj", "{67E57A1C-7871-411D-8AD3-E7DBB85C667E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4397AA6C-5D49-453E-ACDE-DE819C3E0BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4397AA6C-5D49-453E-ACDE-DE819C3E0BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4397AA6C-5D49-453E-ACDE-DE819C3E0BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E57A1C-7871-411D-8AD3-E7DBB85C667E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E57A1C-7871-411D-8AD3-E7DBB85C667E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E57A1C-7871-411D-8AD3-E7DBB85C667E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E57A1C-7871-411D-8AD3-E7DBB85C667E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

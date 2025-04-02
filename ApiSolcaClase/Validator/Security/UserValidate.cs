@@ -9,53 +9,53 @@ namespace ApiSolcaClase.Validator.Security
     public class UserValidate
     {
 
-        ValidateHelper ValidH;
-
         public UserValidate()
         {
-            ValidH = new ValidateHelper();
         }
 
-        public ResponseModelGeneral Login(LoginRequestModel ReqModel)
+        public ResponseModelGeneral<LoginResponseModel> Login(LoginRequestModel ReqModel)
         {
+            ValidateHelper<LoginResponseModel> ValidH = new ValidateHelper<LoginResponseModel>();
 
-            ResponseModelGeneral ValUser = ValidH.ValidResp(ReqModel.User, "User", 12, 4);
+            ResponseModelGeneral<LoginResponseModel> ValUser = ValidH.ValidResp(ReqModel.User, "User", 12, 4);
             if (ValUser.code != 200) return ValUser;
-            ResponseModelGeneral ValPass = ValidH.ValidResp(ReqModel.Pass, "Pass", 12, 4);
+            ResponseModelGeneral<LoginResponseModel> ValPass = ValidH.ValidResp(ReqModel.Pass, "Pass", 12, 4);
             if (ValPass.code != 200) return ValPass;
 
-            return new ResponseModelGeneral(200, "");
+            return new ResponseModelGeneral<LoginResponseModel>(200, "");
         }
 
-        public ResponseModelGeneral UpdateNameUSer(UpdateNameFromUserModelRequest ReqModel)
+        public ResponseModelGeneral<object> UpdateNameUSer(UpdateNameFromUserModelRequest ReqModel)
         {
+            ValidateHelper<object> ValidH = new ValidateHelper<object>();
 
-            ResponseModelGeneral ValName = ValidH.ValidResp(ReqModel.Name, "Name", 25, 4);
+            ResponseModelGeneral<object> ValName = ValidH.ValidResp(ReqModel.Name, "Name", 25, 4);
             if (ValName.code != 200) return ValName;
 
-            return new ResponseModelGeneral(200, "");
+            return new ResponseModelGeneral<object>(200, "");
         }
 
-        public ResponseModelGeneral Register(RegisterRequestModel ReqModel)
+        public ResponseModelGeneral<object> Register(RegisterRequestModel ReqModel)
         {
+            ValidateHelper<object> ValidH = new ValidateHelper<object>();
 
-            ResponseModelGeneral ValUser = ValidH.ValidResp(ReqModel.User, "User", 12, 4);
+            ResponseModelGeneral<object> ValUser = ValidH.ValidResp(ReqModel.User, "User", 12, 4);
             if (ValUser.code != 200) return ValUser;
-            ResponseModelGeneral ValPass = ValidH.ValidResp(ReqModel.Pass, "Pass", 12, 4);
+            ResponseModelGeneral<object> ValPass = ValidH.ValidResp(ReqModel.Pass, "Pass", 12, 4);
             if (ValPass.code != 200) return ValPass;
             bool ValPassStrong = (new HelperGeneral()).PasswordIsStrong(ReqModel.Pass);
-            if (!ValPassStrong) return new ResponseModelGeneral(400, MessageHelper.CredentialsNotStrong);
-            ResponseModelGeneral ValPassR = ValidH.ValidResp(ReqModel.PassR, "PassR", 12, 4);
+            if (!ValPassStrong) return new ResponseModelGeneral<object>(400, MessageHelper.CredentialsNotStrong);
+            ResponseModelGeneral<object> ValPassR = ValidH.ValidResp(ReqModel.PassR, "PassR", 12, 4);
             if (ValPassR.code != 200) return ValPassR;
 
-            if (ReqModel.Pass != ReqModel.PassR) return new ResponseModelGeneral(400, MessageHelper.CredentialsNotMach);
+            if (ReqModel.Pass != ReqModel.PassR) return new ResponseModelGeneral<object>(400, MessageHelper.CredentialsNotMach);
 
-            ResponseModelGeneral ValName = ValidH.ValidResp(ReqModel.Name, "Name", 25, 4);
+            ResponseModelGeneral<object> ValName = ValidH.ValidResp(ReqModel.Name, "Name", 25, 4);
             if (ValName.code != 200) return ValName;
-            ResponseModelGeneral ValEmail = ValidH.ValidResp(ReqModel.Email, "Email", 50, 8, ListRegExp: new List<string> { VarHelper.RegExpEmail }, ListMsjRegExp: new List<string>() { "El parametro de Email no coincide con un correo válido" });
+            ResponseModelGeneral<object> ValEmail = ValidH.ValidResp(ReqModel.Email, "Email", 50, 8, ListRegExp: new List<string> { VarHelper.RegExpEmail }, ListMsjRegExp: new List<string>() { "El parametro de Email no coincide con un correo válido" });
             if (ValEmail.code != 200) return ValEmail;
 
-            return new ResponseModelGeneral(200, "");
+            return new ResponseModelGeneral<object>(200, "");
         }
     }
 }

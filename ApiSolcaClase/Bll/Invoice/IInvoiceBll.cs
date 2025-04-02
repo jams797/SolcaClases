@@ -5,6 +5,6 @@ namespace ApiSolcaClase.Bll.Invoice
 {
     public interface IInvoiceBll
     {
-        public ResponseModelGeneral CreatedInvoice(InvoiceRequestModel ReqModel, int IdUser);
+        public ResponseModelGeneral<object> CreatedInvoice(InvoiceRequestModel ReqModel, int IdUser);
     }
 }

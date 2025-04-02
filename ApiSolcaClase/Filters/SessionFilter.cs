@@ -23,6 +23,8 @@ namespace ApiSolcaClase.Filters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            //
+
             SessionModel? SessionM = null;
             GeneratorJWTReponseModel? ResponseJwt = null;
             try
@@ -36,7 +38,7 @@ namespace ApiSolcaClase.Filters
             }
             if(SessionM == null)
             {
-                context.Result = new OkObjectResult(new ResponseModelGeneral(
+                context.Result = new OkObjectResult(new ResponseModelGeneral<object>(
                     401,
                     MessageHelper.NotAuthorized,
                     null,

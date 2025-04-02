@@ -1,4 +1,5 @@
 ﻿using ApiSolcaClase.Bll.Security;
+using ApiSolcaClase.Filters;
 using ApiSolcaClase.Helpers.Data;
 using ApiSolcaClase.Helpers.Models;
 using ApiSolcaClase.Models.AppModels.Security;
@@ -27,18 +28,18 @@ namespace ApiSolcaClase.Controllers.Security
        
         // POST api/<LoginController>
         [HttpPost]
-        public ResponseModelGeneral Post([FromBody]LoginRequestModel LogReq)
+        public async Task<ResponseModelGeneral<LoginResponseModel>> Post([FromBody]LoginRequestModel LogReq)
         {
             try
             {
-                ResponseModelGeneral ValidD = UsVald.Login(LogReq);
+                ResponseModelGeneral<LoginResponseModel> ValidD = UsVald.Login(LogReq);
                 if (ValidD.code != 200) return ValidD;
 
 
-                return SecBll.Login(LogReq);
+                return await SecBll.Login(LogReq);
             } catch (Exception ex)
             {
-                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);
+                return new ResponseModelGeneral<LoginResponseModel>(500, MessageHelper.ErrorGeneral, messageDev: ex.StackTrace.ToString());
             }
         }
 

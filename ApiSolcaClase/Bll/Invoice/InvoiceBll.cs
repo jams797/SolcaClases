@@ -26,7 +26,7 @@ namespace ApiSolcaClase.Bll.Invoice
             this.InvRep = InvRep;
             this.InvDetRep = InvDetRep;
         }
-        public ResponseModelGeneral CreatedInvoice(InvoiceRequestModel ReqModel, int IdUser)
+        public ResponseModelGeneral<object> CreatedInvoice(InvoiceRequestModel ReqModel, int IdUser)
         {
             db.Database.BeginTransaction();
 
@@ -42,9 +42,9 @@ namespace ApiSolcaClase.Bll.Invoice
                 foreach (InvoiceRequestModelProduct Item in ReqModel.Products)
                 {
                     Products? ExistProduct = ProdRep.GetProductById(Item.IdProduct);
-                    if (ExistProduct == null) return new ResponseModelGeneral(400, MessageHelper.ProductNotFound, db: db, ExecuteRollback: true);
+                    if (ExistProduct == null) return new ResponseModelGeneral<object>(400, MessageHelper.ProductNotFound, db: db, ExecuteRollback: true);
 
-                    if (ExistProduct.Qty < Item.Qty) return new ResponseModelGeneral(400, MessageHelper.ProductOutRangeByQty, db: db, ExecuteRollback: true);
+                    if (ExistProduct.Qty < Item.Qty) return new ResponseModelGeneral<object>(400, MessageHelper.ProductOutRangeByQty, db: db, ExecuteRollback: true);
 
                     InvoiceDetail InvDetail = new InvoiceDetail();
                     InvDetail.Qty = Item.Qty;
@@ -71,11 +71,11 @@ namespace ApiSolcaClase.Bll.Invoice
                 db.Database.CommitTransaction();
 
 
-                return new ResponseModelGeneral(200, "");
+                return new ResponseModelGeneral<object>(200, "");
             } catch (Exception ex)
             {
                 db.Database.RollbackTransaction();
-                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);
+                return new ResponseModelGeneral<object>(500, MessageHelper.ErrorGeneral);
             }
         }
     }

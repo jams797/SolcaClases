@@ -48,18 +48,18 @@ namespace ApiSolcaClase.Controllers.Security
        
         // POST api/<LoginController>
         [HttpPost]
-        public ResponseModelGeneral Post([FromBody]RegisterRequestModel ReqModel)
+        public ResponseModelGeneral<object> Post([FromBody]RegisterRequestModel ReqModel)
         {
             try
             {
-                ResponseModelGeneral ValidD = UsVald.Register(ReqModel);
+                ResponseModelGeneral<object> ValidD = UsVald.Register(ReqModel);
                 if (ValidD.code != 200) return ValidD;
 
                 return SecBll.SaveUser(ReqModel);
             }
             catch (Exception ex)
             {
-                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral);
+                return new ResponseModelGeneral<object>(500, MessageHelper.ErrorGeneral);
             }
         }
 

@@ -6,7 +6,7 @@ namespace ApiSolcaClase.Bll.WeatherForecast
 {
     public interface IWeatherForecastBll
     {
-        public ResponseModelGeneral DecryptPass(WheatherForecastRequestModel resqModel);
+        public ResponseModelGeneral<string> DecryptPass(WheatherForecastRequestModel resqModel);
         //public List<Users> GetListUsers();
     }
 }

@@ -39,7 +39,7 @@ namespace ApiSolcaClase.Controllers.Invoice
 
         // POST api/<InvoiceController>
         [HttpPost]
-        public ResponseModelGeneral Post([FromBody] InvoiceRequestModel ReqModel)
+        public ResponseModelGeneral<object> Post([FromBody] InvoiceRequestModel ReqModel)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace ApiSolcaClase.Controllers.Invoice
             }
             catch (Exception ex)
             {
-                return new ResponseModelGeneral(500, MessageHelper.ErrorGeneral, ex.StackTrace.ToString());
+                return new ResponseModelGeneral<object>(500, MessageHelper.ErrorGeneral, ex.StackTrace.ToString());
             }
         }
 

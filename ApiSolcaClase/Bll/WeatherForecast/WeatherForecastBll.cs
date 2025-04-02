@@ -19,14 +19,14 @@ namespace ApiSolcaClase.Bll.WeatherForecast
         }
 
 
-        public ResponseModelGeneral DecryptPass(WheatherForecastRequestModel resqModel)
+        public ResponseModelGeneral<string> DecryptPass(WheatherForecastRequestModel resqModel)
         {
             HelperGeneral HelG = new HelperGeneral();
             string? textT = HelG.DesencryptPassWord(resqModel.text);
 
             if(textT != null)
             {
-                return new ResponseModelGeneral(
+                return new ResponseModelGeneral<string>(
                     200,
                     "Ok",
                     textT,
@@ -34,7 +34,7 @@ namespace ApiSolcaClase.Bll.WeatherForecast
                 );
             } else
             {
-                return new ResponseModelGeneral(
+                return new ResponseModelGeneral<string>(
                     500,
                     MessageHelper.ErrorGeneral,
                     textT,
